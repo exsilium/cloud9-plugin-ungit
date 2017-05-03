@@ -1,0 +1,90 @@
+<?xml version='1.0'?>
+<a:skin xmlns:a="http://ajax.org/2005/aml">
+<a:button name="btn-ungit-nav">
+    <a:style><![CDATA[
+        .btn-ungit-nav {
+          height             : 24px;
+          overflow           : hidden;
+          cursor             : default;
+          position           : relative;
+          background-repeat:no-repeat;
+          background-position: 0 0;
+          -moz-user-select: -moz-none;
+          -khtml-user-select : none;
+          -webkit-user-select: none;
+          -o-user-select: none;
+          user-select        : none;
+          
+          background: url(images/toolbar.png) repeat-x 0 100px;
+          border-radius: 3px;
+
+          border: 1px solid transparent;
+        }
+
+        .btn-ungit-navOver {
+          border-color: #010910;
+        }
+
+        .btn-ungit-navDown {
+          background-position : 0 -36px;
+          border-color: #010910;
+        }
+
+        .btn-ungit-nav .icon {
+          width                 : 24px;
+          height                : 23px;
+          -webkit-border-radius : 3px;
+          -moz-border-radius    : 3px;
+          border-radius         : 3px;
+          margin-left: 1px;
+        }
+        
+        .btn-ungit-nav.close .icon {
+            position: relative;
+        }
+        
+        .btn-ungit-nav.close .icon:before {
+          content: "\f00d";
+          font-family: FontAwesome;
+          color: #fff;
+          left:6px;
+          position:absolute;
+          top:6px;
+        }
+        
+        .btn-ungit-nav.refresh .icon {
+            position: relative;
+        }
+        
+        .btn-ungit-nav.refresh .icon:before {
+          content: "\f021";
+          font-family: FontAwesome;
+          color: #fff;
+          left:6px;
+          position:absolute;
+          top:6px;
+        }
+        
+        .btn-ungit-nav.popup .icon {
+            position: relative;
+        }
+        
+        .btn-ungit-nav.popup .icon:before {
+          content: "\f077";
+          font-family: FontAwesome;
+          color: #fff;
+          left:6px;
+          position:absolute;
+          top:6px;
+        }
+    ]]></a:style>
+
+     <a:presentation>
+        <a:main caption="div" label="div" background="." icon="div">
+            <div class="btn-ungit-nav">
+                <div class="icon"/>
+            </div>
+        </a:main>
+    </a:presentation>
+</a:button>
+</a:skin>

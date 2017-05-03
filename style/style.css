@@ -1,0 +1,34 @@
+.ungitbar {
+    position : relative;
+    background: url("{ide.staticPrefix}/ext/ungit/style/images/toolbar.png") repeat-x;
+    border-bottom: 1px solid #000000;
+}
+
+#ungit_div {
+    position: absolute;
+    top: 0; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1000;
+    background: #fff;
+    filter: alpha(opacity=0);
+    opacity: 0;
+}
+
+#ungit_iframe {
+    border: none;
+    width: 100%;
+    height: 100%;
+    zoom: 0.70;
+    -moz-transform: scale(0.70);
+    -moz-transform-origin: 0 0;
+    -o-transform: scale(0.70);
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale(0.70);
+    -webkit-transform-origin: 0 0;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  #ungit_iframe  { zoom: 1;  }
+}

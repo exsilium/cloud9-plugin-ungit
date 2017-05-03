@@ -1,0 +1,14 @@
+{
+    "name": "ext.ungit",
+    "version": "0.0.1",
+    "main": "ungit.js",
+    "private": true,
+    "plugin": {
+        "provides": [
+            "ext.ungit"
+        ],
+        "consumes": [
+            "client-plugins"
+        ]
+    }
+}

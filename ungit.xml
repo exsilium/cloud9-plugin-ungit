@@ -1,0 +1,23 @@
+<a:application xmlns:a="http://ajax.org/2005/aml">
+    <a:tab skin="docktab" visible="false">
+        <a:page id="pgUngit" caption="Ungit">
+            <div id="ungit_div"></div>
+            <a:bar border="0 0 0 0">
+                <a:hbox class="ungitbar" height="36" align="center" edge="4 5 4" padding="5">
+                    <a:textbox id="txtUngit" style="width:100%" class="ace_searchbox tb_textbox searchbox searchTxt tb_console"
+                        flex="1" value=""
+                        onkeydown="if (event.keyCode == 13) require('ext/ungit/ungit').refresh()" />
+                    <a:button onclick="require('ext/ungit/ungit').refresh()" skin="btn-ungit-nav" skinset="ungitskin" class="refresh"></a:button>
+                    <a:divider skin="c9-divider" />
+                    <a:button onclick="require('ext/ungit/ungit').popup()" skin="btn-ungit-nav" skinset="ungitskin" class="popup"></a:button>
+                    <a:divider skin="c9-divider" />
+                    <a:button onclick="require('ext/ungit/ungit').close()" skin="btn-ungit-nav" skinset="ungitskin" class="close"></a:button>
+                </a:hbox>
+            </a:bar>
+            <iframe
+                id="ungit_iframe"
+                onload="require('ext/ungit/ungit').onLoad()"
+                src="" />
+        </a:page>
+    </a:tab>
+</a:application>

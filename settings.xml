@@ -1,0 +1,4 @@
+<a:application xmlns:a="http://ajax.org/2005/aml">
+    <a:checkbox class="underlined" label="Ungit"
+      value="[ungit/@ungit_setting_app]" skin="checkbox_grey" position="1000"/>
+</a:application>
