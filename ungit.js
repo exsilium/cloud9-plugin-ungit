@@ -1,3 +1,5 @@
+/* global pgUngit txtUngit ungit_iframe */
+
 define(function(require, exports, module) {
 
 var ide = require("core/ide");
@@ -14,6 +16,24 @@ var markupSettings = require("text!ext/ungit/settings.xml");
 var elementResizeEvent = require('ext/ungit/ElementResizeEvent');
 
 var $name = "ext/ungit/ungit";
+
+function constructAddress() {
+  var baseURL = settings.model.queryValue("ungit/@ungit_addr");
+  
+  if(baseURL.substring(0, 7) === 'http://' || baseURL.substring(0,8) === 'https://') {
+    if(baseURL[baseURL.length-1] !== "/") {
+      baseURL = baseURL + '/';
+    }
+    baseURL = baseURL + '?noheader=true/#/repository?path=' +
+              encodeURIComponent(settings.model.queryValue("ungit/@workspace_base")) +
+              encodeURIComponent(settings.model.queryValue("auto/tree_selection/@path"));
+              
+    return baseURL;
+  }
+  else {
+    return "Invalid Configuration";
+  }
+}
 
 module.exports = ext.register($name, {
     name    : "Ungit",
@@ -48,9 +68,13 @@ module.exports = ext.register($name, {
     },
 
     onLoad: function () {
-
+      // onLoad is called when the panel is shown for the first time.
+      // (Including when the dock app is shown without the actual window)
+      if(this.live === null) {
+        this.live = true;
+      }
     },
-
+    
     hook: function() {
         var _self = this;
 
@@ -101,22 +125,34 @@ module.exports = ext.register($name, {
         ide.addEventListener("extload", function(e){
             ide.addEventListener("settings.load", function(e){
                 settings.setDefaults("ungit", [
-                    ["ungit_setting_app", "false"]
+                    ["plugin_debug", "false"],
+                    ["ungit_addr", "https://host/ungit/"],
+                    ["workspace_base", "/home/user"]
                 ]);
             });
         });
 
         ide.addEventListener("dockpanel.loaded", function (e) {
-            _self.hidePageHeader();
+          _self.hidePageHeader();
+          
+          /* This example shows how to read back the dock button value.
+           * Dockpanel does not dispatch a separate event when the button
+           * is pressed.
+           */
+          if (settings.model.queryValue("ungit/@plugin_debug") === "true") {
+              var dockButton = _self._getDockButton();
+              dockButton.cache.addEventListener("onmouseup", function(e) { 
+              console.log("Button value: " + e.currentTarget.value);
+            }, false);
+          }
         });
-
+        
         ext.initExtension(this);
     },
 
     isVisible: function () {
-        console.log("HELO");
-        var button = this._getDockButton();
-        return button && button.hidden && button.hidden === -1;
+      var button = this._getDockButton();
+      return button && button.hidden && button.hidden === -1;
     },
 
     // Patch the docked section to remove the page caption
@@ -137,28 +173,31 @@ module.exports = ext.register($name, {
         dock.expandBar(bar);
         dock.showSection(this.$name, false);
         this.hidePageHeader();
-        var frmUngit = this.getIframe();
-        this.refresh("https://localhost");
+        this.refresh(constructAddress());
     },
 
     // Called when separating the dock to a separate window
     popup: function (url) {
         url = url || txtUngit.getValue();
-        window.open(url, "https://localhost");
+        window.open(url);
     },
 
     refresh: function (url) {
-        var frmUngit = this.getIframe();
-        var dockHeight = document.getElementsByClassName('docktab')[0].clientHeight || document.getElementsByClassName('docktab')[2].clientHeight;
-        var dockWidth = document.getElementsByClassName('docktab')[0].clientWidth || document.getElementsByClassName('docktab')[2].clientWidth;
-        url = url || txtUngit.getValue();
-        frmUngit.$ext.src = url;
-        txtUngit.setValue(url);
+      var frmUngit = this.getIframe();
+      var dockHeight = document.getElementsByClassName('docktab')[0].clientHeight || document.getElementsByClassName('docktab')[2].clientHeight;
+      var dockWidth = document.getElementsByClassName('docktab')[0].clientWidth || document.getElementsByClassName('docktab')[2].clientWidth;
+      url = url || txtUngit.getValue();
+      frmUngit.$ext.src = url;
+      txtUngit.setValue(url);
+      if (settings.model.queryValue("ungit/@plugin_debug") === "true") {
         console.log("Debug: " + dockHeight + " vs " + document.getElementById("ungit_div").clientHeight);
         console.log("Debug: " + dockWidth + " vs " + document.getElementById("ungit_div").clientWidth);
-        ungit_iframe.style.width = dockWidth / 0.70 + 1 + "px";
-        ungit_iframe.style.height = (dockHeight - 36) / 0.70 + 1 + "px";
+      }
+      ungit_iframe.style.width = dockWidth / 0.70 + 1 + "px";
+      ungit_iframe.style.height = (dockHeight - 36) / 0.70 + 1 + "px";
+      if (settings.model.queryValue("ungit/@plugin_debug") === "true") {
         console.log("Debug: Height - " + document.getElementById("ungit_div").clientHeight + " | Width - " + document.getElementById("ungit_div").clientWidth);
+      }
     },
 
     close: function () {
@@ -167,21 +206,23 @@ module.exports = ext.register($name, {
     },
 
     init: function() {
-        var resizeTimer = false;
-        apf.importCssString(this.css || "");
-        apf.importCssString(this.fa || "");
-        txtUngit.setValue("https://localhost");
+      var resizeTimer = false;
+      apf.importCssString(this.css || "");
+      apf.importCssString(this.fa || "");
+      txtUngit.setValue("https://localhost");
 
-        var element = document.getElementById("ungit_div");
-        elementResizeEvent(element, function() {
-            console.log("Resized! " + element.clientWidth + "x" + element.clientHeight);
-            console.log("Resize timer: " + (resizeTimer ? "true" : "false"));
-            if(!resizeTimer) resizeTimer = true;
-            /* During the resize, the iframe needs to be minimized, so that the dock window resize
-               can successfully be made without clipping effect */
-            if (ungit_iframe.style.width != "0px") ungit_iframe.style.width = 0 + "px";
-            if (ungit_iframe.style.height != "0px") ungit_iframe.style.height = 0 + "px";
-        });
+      var element = document.getElementById("ungit_div");
+      elementResizeEvent(element, function() {
+        if (settings.model.queryValue("ungit/@plugin_debug") === "true") {
+          console.log("Resized! " + element.clientWidth + "x" + element.clientHeight);
+          console.log("Resize timer: " + (resizeTimer ? "true" : "false"));
+        }
+        if(!resizeTimer) resizeTimer = true;
+        /* During the resize, the iframe needs to be minimized, so that the dock window resize
+           can successfully be made without clipping effect */
+        if (ungit_iframe.style.width != "0px") ungit_iframe.style.width = 0 + "px";
+        if (ungit_iframe.style.height != "0px") ungit_iframe.style.height = 0 + "px";
+      });
     },
     
     getIframe: function() {
