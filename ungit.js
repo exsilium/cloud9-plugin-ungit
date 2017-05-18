@@ -206,7 +206,7 @@ module.exports = ext.register($name, {
     },
 
     init: function() {
-      var resizeTimer = false;
+      var resizeTimer = null;
       apf.importCssString(this.css || "");
       apf.importCssString(this.fa || "");
       txtUngit.setValue("https://localhost");
@@ -217,7 +217,16 @@ module.exports = ext.register($name, {
           console.log("Resized! " + element.clientWidth + "x" + element.clientHeight);
           console.log("Resize timer: " + (resizeTimer ? "true" : "false"));
         }
-        if(!resizeTimer) resizeTimer = true;
+        if(resizeTimer) {
+          clearTimeout(resizeTimer);
+        }
+        
+        resizeTimer = setTimeout(function() {
+          resizeTimer = null;
+          ungit_iframe.style.width = element.clientWidth / 0.70 + 1 + "px";
+          ungit_iframe.style.height = (element.clientHeight - 36) / 0.70 + 1 + "px";
+        }, 500);
+        
         /* During the resize, the iframe needs to be minimized, so that the dock window resize
            can successfully be made without clipping effect */
         if (ungit_iframe.style.width != "0px") ungit_iframe.style.width = 0 + "px";
