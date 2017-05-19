@@ -140,10 +140,12 @@ module.exports = ext.register($name, {
            * is pressed.
            */
           if (settings.model.queryValue("ungit/@plugin_debug") === "true") {
-              var dockButton = _self._getDockButton();
+            var dockButton = _self._getDockButton();
+            if('cache' in dockButton) {
               dockButton.cache.addEventListener("onmouseup", function(e) { 
-              console.log("Button value: " + e.currentTarget.value);
-            }, false);
+                console.log("Button value: " + e.currentTarget.value);
+              }, false);
+            }
           }
         });
         
