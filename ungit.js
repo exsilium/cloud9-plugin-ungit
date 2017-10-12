@@ -35,6 +35,18 @@ function constructAddress() {
   }
 }
 
+function openTab(url) {
+    // Create a link
+    var a = window.document.createElement("a");
+    a.target = '_blank';
+    a.href = url;
+ 
+    // Dispatch event
+    var e = window.document.createEvent("MouseEvents");
+    e.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    a.dispatchEvent(e);
+}
+
 module.exports = ext.register($name, {
     name    : "Ungit",
     dev     : "Sten Feldman",
@@ -170,12 +182,19 @@ module.exports = ext.register($name, {
     },
 
     ungit: function () {
+      if(apf.isIphone) {
+        // on iOS, driving a full application within iframe is simply too much even on A10X
+        // We fall back to opening ungit in a new tab instead.
+        openTab(constructAddress());
+      }
+      else {
         var bar = this._getDockBar();
         dock.showBar(bar);
         dock.expandBar(bar);
         dock.showSection(this.$name, false);
         this.hidePageHeader();
         this.refresh(constructAddress());
+      }
     },
 
     // Called when separating the dock to a separate window
