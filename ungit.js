@@ -47,6 +47,40 @@ function openTab(url) {
     a.dispatchEvent(e);
 }
 
+function bindElementResize() {
+  console.log("BIND CALLED!");
+  var resizeTimer = null;
+  var bindingInit = false;
+  var element = document.getElementById("ungit_div");
+  elementResizeEvent(element, function() {
+    if(bindingInit) {
+      if (settings.model.queryValue("ungit/@plugin_debug") === "true") {
+        console.log("Resized! " + element.clientWidth + "x" + element.clientHeight);
+        console.log("Resize timer: " + (resizeTimer ? "true" : "false"));
+      }
+      if(resizeTimer) {
+        clearTimeout(resizeTimer);
+      }
+    
+      resizeTimer = setTimeout(function() {
+        resizeTimer = null;
+        ungit_iframe.style.width = element.clientWidth / 0.70 + 1 + "px";
+        ungit_iframe.style.height = (element.clientHeight - 36) / 0.70 + 1 + "px";
+      }, 500);
+    
+      /* During the resize, the iframe needs to be minimized, so that the dock window resize
+         can successfully be made without clipping effect */
+      if (ungit_iframe.style.width != "0px") ungit_iframe.style.width = 0 + "px";
+      if (ungit_iframe.style.height != "0px") ungit_iframe.style.height = 0 + "px";
+    }
+    bindingInit = true;
+  });
+}
+    
+function unbindElementResize(element) {
+  elementResizeEvent.unbind(element);
+}
+
 module.exports = ext.register($name, {
     name    : "Ungit",
     dev     : "Sten Feldman",
@@ -110,7 +144,7 @@ module.exports = ext.register($name, {
             width : 900,
             barNum: 3,
             "min-width" : 400,
-            headerVisibility: "false",
+            headerVisibility: "true",
             sections : [{
                 width : 900,
                 height: 200,
@@ -138,6 +172,7 @@ module.exports = ext.register($name, {
             ide.addEventListener("settings.load", function(e){
                 settings.setDefaults("ungit", [
                     ["plugin_debug", "false"],
+                    ["top_bar", "true"],
                     ["ungit_addr", "https://host/ungit/"],
                     ["workspace_base", "/home/user"]
                 ]);
@@ -156,6 +191,18 @@ module.exports = ext.register($name, {
             if('cache' in dockButton) {
               dockButton.cache.addEventListener("onmouseup", function(e) { 
                 console.log("Button value: " + e.currentTarget.value);
+                
+                if(e.currentTarget.value === true) {
+                  console.log("The state is true");
+                  bindElementResize();
+                }
+                
+                if(e.currentTarget.value === false) {
+                  console.log("The state is false!");
+                  var element = document.getElementById("ungit_div");
+                  unbindElementResize(element);
+                }
+                
               }, false);
             }
           }
@@ -181,6 +228,7 @@ module.exports = ext.register($name, {
         }
     },
 
+    /* Called when Ungit menu item is clicked */
     ungit: function () {
       if(apf.isIphone) {
         // on iOS, driving a full application within iframe is simply too much even on A10X
@@ -188,12 +236,15 @@ module.exports = ext.register($name, {
         openTab(constructAddress());
       }
       else {
+        console.log("Visible: " + this.isVisible());
         var bar = this._getDockBar();
         dock.showBar(bar);
         dock.expandBar(bar);
         dock.showSection(this.$name, false);
         this.hidePageHeader();
         this.refresh(constructAddress());
+
+        bindElementResize();
       }
     },
 
@@ -221,38 +272,19 @@ module.exports = ext.register($name, {
       }
     },
 
+    /* Close is called when Window Section is closed, not, when the dockable window is hidden */
     close: function () {
-        dock.hideSection(this.$name, this.$button);
-        this.live = null;
+      var element = document.getElementById("ungit_div");
+      unbindElementResize(element);
+      dock.hideSection(this.$name, this.$button);
+      this.live = null;
     },
 
     init: function() {
-      var resizeTimer = null;
+      console.log("Init called!");
       apf.importCssString(this.css || "");
       apf.importCssString(this.fa || "");
       txtUngit.setValue("https://localhost");
-
-      var element = document.getElementById("ungit_div");
-      elementResizeEvent(element, function() {
-        if (settings.model.queryValue("ungit/@plugin_debug") === "true") {
-          console.log("Resized! " + element.clientWidth + "x" + element.clientHeight);
-          console.log("Resize timer: " + (resizeTimer ? "true" : "false"));
-        }
-        if(resizeTimer) {
-          clearTimeout(resizeTimer);
-        }
-        
-        resizeTimer = setTimeout(function() {
-          resizeTimer = null;
-          ungit_iframe.style.width = element.clientWidth / 0.70 + 1 + "px";
-          ungit_iframe.style.height = (element.clientHeight - 36) / 0.70 + 1 + "px";
-        }, 500);
-        
-        /* During the resize, the iframe needs to be minimized, so that the dock window resize
-           can successfully be made without clipping effect */
-        if (ungit_iframe.style.width != "0px") ungit_iframe.style.width = 0 + "px";
-        if (ungit_iframe.style.height != "0px") ungit_iframe.style.height = 0 + "px";
-      });
     },
     
     getIframe: function() {

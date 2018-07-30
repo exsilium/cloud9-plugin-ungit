@@ -1,9 +1,9 @@
 <a:application xmlns:a="http://ajax.org/2005/aml">
     <a:tab skin="docktab" visible="false">
-        <a:page id="pgUngit" caption="Ungit">
+        <a:page id="pgUngit" caption="Ungit" style="background-color:#303030">
             <div id="ungit_div"></div>
-            <a:bar border="0 0 0 0">
-                <a:hbox class="ungitbar" height="36" align="center" edge="4 5 4" padding="5">
+            <a:bar border="0 0 0 0" visible="[{require('ext/settings/settings').model}::ungit/@top_bar]">
+                <a:hbox class="ungitbar" height="36" width="100%" align="center" edge="4 5 4" padding="5">
                     <a:textbox id="txtUngit" style="width:100%" class="ace_searchbox tb_textbox searchbox searchTxt tb_console"
                         flex="1" value=""
                         onkeydown="if (event.keyCode == 13) require('ext/ungit/ungit').refresh()" />
