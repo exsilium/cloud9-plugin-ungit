@@ -1,4 +1,4 @@
-<a:application xmlns:a="http://ajax.org/2005/aml">
+<a:application xmlns:a="https://github.com/pylonide/pylon">
     <a:tab skin="docktab" visible="false">
         <a:page id="pgUngit" caption="Ungit" style="background-color:#303030">
             <div id="ungit_div"></div>

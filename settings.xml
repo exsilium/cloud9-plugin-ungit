@@ -1,4 +1,4 @@
-<a:application xmlns:a="http://ajax.org/2005/aml">
+<a:application xmlns:a="https://github.com/pylonide/pylon">
     <a:checkbox class="underlined" label="Plugin Debug"
       value="[ungit/@plugin_debug]" skin="checkbox_grey" position="1000"/>
     <a:checkbox class="underlined" label="Show Top Bar"
