@@ -1,11 +1,11 @@
 {
-    "name": "ext.ungit",
-    "version": "0.1.0",
-    "main": "ungit.js",
+    "name": "ext.mungit",
+    "version": "0.2.0",
+    "main": "mungit.js",
     "private": true,
     "plugin": {
         "provides": [
-            "ext.ungit"
+            "ext.mungit"
         ],
         "consumes": [
             "client-plugins"
