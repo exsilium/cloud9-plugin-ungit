@@ -1,8 +1,8 @@
 <?xml version='1.0'?>
 <a:skin xmlns:a="https://github.com/pylonide/pylon">
-<a:button name="btn-ungit-nav">
+<a:button name="btn-mungit-nav">
     <a:style><![CDATA[
-        .btn-ungit-nav {
+        .btn-mungit-nav {
           height             : 24px;
           overflow           : hidden;
           cursor             : default;
@@ -21,16 +21,16 @@
           border: 1px solid transparent;
         }
 
-        .btn-ungit-navOver {
+        .btn-mungit-navOver {
           border-color: #010910;
         }
 
-        .btn-ungit-navDown {
+        .btn-mungit-navDown {
           background-position : 0 -36px;
           border-color: #010910;
         }
 
-        .btn-ungit-nav .icon {
+        .btn-mungit-nav .icon {
           width                 : 24px;
           height                : 23px;
           -webkit-border-radius : 3px;
@@ -39,11 +39,11 @@
           margin-left: 1px;
         }
         
-        .btn-ungit-nav.close .icon {
+        .btn-mungit-nav.close .icon {
             position: relative;
         }
         
-        .btn-ungit-nav.close .icon:before {
+        .btn-mungit-nav.close .icon:before {
           content: "\f00d";
           font-family: FontAwesome;
           color: #fff;
@@ -52,11 +52,11 @@
           top:6px;
         }
         
-        .btn-ungit-nav.refresh .icon {
+        .btn-mungit-nav.refresh .icon {
             position: relative;
         }
         
-        .btn-ungit-nav.refresh .icon:before {
+        .btn-mungit-nav.refresh .icon:before {
           content: "\f021";
           font-family: FontAwesome;
           color: #fff;
@@ -65,11 +65,11 @@
           top:6px;
         }
         
-        .btn-ungit-nav.popup .icon {
+        .btn-mungit-nav.popup .icon {
             position: relative;
         }
         
-        .btn-ungit-nav.popup .icon:before {
+        .btn-mungit-nav.popup .icon:before {
           content: "\f077";
           font-family: FontAwesome;
           color: #fff;
@@ -81,7 +81,7 @@
 
      <a:presentation>
         <a:main caption="div" label="div" background="." icon="div">
-            <div class="btn-ungit-nav">
+            <div class="btn-mungit-nav">
                 <div class="icon"/>
             </div>
         </a:main>

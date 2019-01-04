@@ -1,14 +1,14 @@
 <a:application xmlns:a="https://github.com/pylonide/pylon">
     <a:checkbox class="underlined" label="Plugin Debug"
-      value="[ungit/@plugin_debug]" skin="checkbox_grey" position="1000"/>
+      value="[mungit/@plugin_debug]" skin="checkbox_grey" position="1000"/>
     <a:checkbox class="underlined" label="Show Top Bar"
-      value="[ungit/@top_bar]" skin="checkbox_grey" position="1000"/>
+      value="[mungit/@top_bar]" skin="checkbox_grey" position="1000"/>
     <a:hbox position="10000" edge="2 5 5 5" align="center" class="underlined">
       <a:label flex="1">Base URL:</a:label>
-      <a:textbox value="[ungit/@ungit_addr]" width="140" focusselect="false" />
+      <a:textbox value="[mungit/@mungit_addr]" width="140" focusselect="false" />
     </a:hbox>
     <a:hbox position="20000" edge="2 5 5 5" align="center" class="underlined">
       <a:label flex="1">Base Path:</a:label>
-      <a:textbox value="[ungit/@workspace_base]" width="140" focusselect="false" />
+      <a:textbox value="[mungit/@workspace_base]" width="140" focusselect="false" />
     </a:hbox>
 </a:application>

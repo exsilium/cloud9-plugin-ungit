@@ -1,10 +1,10 @@
-.ungitbar {
+.mungitbar {
     position : relative;
-    background: url("{ide.staticPrefix}/ext/ungit/style/images/toolbar.png") repeat-x;
+    background: url("{ide.staticPrefix}/ext/mungit/style/images/toolbar.png") repeat-x;
     border-bottom: 1px solid #000000;
 }
 
-#ungit_div {
+#mungit_div {
     position: absolute;
     top: 0; 
     left: 0;
@@ -16,7 +16,7 @@
     opacity: 0;
 }
 
-#ungit_iframe {
+#mungit_iframe {
     border: none;
     width: 100%;
     height: 100%;
@@ -30,5 +30,5 @@
 }
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-  #ungit_iframe  { zoom: 1;  }
+  #mungit_iframe  { zoom: 1;  }
 }

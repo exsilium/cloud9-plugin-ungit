@@ -1,4 +1,4 @@
-/* global pgUngit txtUngit ungit_iframe */
+/* global pgMungit txtMungit mungit_iframe */
 
 define(function(require, exports, module) {
 
@@ -8,24 +8,24 @@ var util = require("core/util");
 var settings = require("ext/settings/settings");
 var menus = require("ext/menus/menus");
 var dock = require("ext/dockpanel/dockpanel");
-var markup = require("text!ext/ungit/ungit.xml");
-var skin    = require("text!ext/ungit/skin.xml");
-var fa      = require("text!ext/ungit/style/font-awesome.css");
-var css     = require("text!ext/ungit/style/style.css");
-var markupSettings = require("text!ext/ungit/settings.xml");
-var elementResizeEvent = require('ext/ungit/ElementResizeEvent');
+var markup = require("text!ext/mungit/mungit.xml");
+var skin    = require("text!ext/mungit/skin.xml");
+var fa      = require("text!ext/mungit/style/font-awesome.css");
+var css     = require("text!ext/mungit/style/style.css");
+var markupSettings = require("text!ext/mungit/settings.xml");
+var elementResizeEvent = require('ext/mungit/ElementResizeEvent');
 
-var $name = "ext/ungit/ungit";
+var $name = "ext/mungit/mungit";
 
 function constructAddress() {
-  var baseURL = settings.model.queryValue("ungit/@ungit_addr");
+  var baseURL = settings.model.queryValue("mungit/@mungit_addr");
   
   if(baseURL.substring(0, 7) === 'http://' || baseURL.substring(0,8) === 'https://') {
     if(baseURL[baseURL.length-1] !== "/") {
       baseURL = baseURL + '/';
     }
     baseURL = baseURL + '?noheader=true/#/repository?path=' +
-              encodeURIComponent(settings.model.queryValue("ungit/@workspace_base")) +
+              encodeURIComponent(settings.model.queryValue("mungit/@workspace_base")) +
               encodeURIComponent(settings.model.queryValue("auto/tree_selection/@path"));
               
     return baseURL;
@@ -51,10 +51,10 @@ function bindElementResize() {
   console.log("BIND CALLED!");
   var resizeTimer = null;
   var bindingInit = false;
-  var element = document.getElementById("ungit_div");
+  var element = document.getElementById("mungit_div");
   elementResizeEvent(element, function() {
     if(bindingInit) {
-      if (settings.model.queryValue("ungit/@plugin_debug") === "true") {
+      if (settings.model.queryValue("mungit/@plugin_debug") === "true") {
         console.log("Resized! " + element.clientWidth + "x" + element.clientHeight);
         console.log("Resize timer: " + (resizeTimer ? "true" : "false"));
       }
@@ -64,14 +64,14 @@ function bindElementResize() {
     
       resizeTimer = setTimeout(function() {
         resizeTimer = null;
-        ungit_iframe.style.width = element.clientWidth / 0.70 + 1 + "px";
-        ungit_iframe.style.height = (element.clientHeight - 36) / 0.70 + 1 + "px";
+        mungit_iframe.style.width = element.clientWidth / 0.70 + 1 + "px";
+        mungit_iframe.style.height = (element.clientHeight - 36) / 0.70 + 1 + "px";
       }, 500);
     
       /* During the resize, the iframe needs to be minimized, so that the dock window resize
          can successfully be made without clipping effect */
-      if (ungit_iframe.style.width != "0px") ungit_iframe.style.width = 0 + "px";
-      if (ungit_iframe.style.height != "0px") ungit_iframe.style.height = 0 + "px";
+      if (mungit_iframe.style.width != "0px") mungit_iframe.style.width = 0 + "px";
+      if (mungit_iframe.style.height != "0px") mungit_iframe.style.height = 0 + "px";
     }
     bindingInit = true;
   });
@@ -82,18 +82,18 @@ function unbindElementResize(element) {
 }
 
 module.exports = ext.register($name, {
-    name    : "Ungit",
+    name    : "Mungit",
     dev     : "Sten Feldman",
     type    : ext.GENERAL,
     alone   : true,
     markup  : markup,
     $name   : $name,
-    $button : "pgUngit",
+    $button : "pgMungit",
     skin    : {
-        id   : "ungitskin",
+        id   : "mungitskin",
         data : skin,
-        "media-path" : ide.staticPrefix + "/ext/ungit/style/images/",
-        "icon-path"  : ide.staticPrefix + "/ext/ungit/style/icons/"
+        "media-path" : ide.staticPrefix + "/ext/mungit/style/images/",
+        "icon-path"  : ide.staticPrefix + "/ext/mungit/style/icons/"
     },
     fa      : util.replaceStaticPrefix(fa),
     css     : util.replaceStaticPrefix(css),
@@ -124,17 +124,17 @@ module.exports = ext.register($name, {
     hook: function() {
         var _self = this;
 
-        settings.addSettings("Ungit", markupSettings);
+        settings.addSettings("Mungit", markupSettings);
 
         this.nodes.push(
             menus.$insertByIndex(barTools, new apf.button({
                 skin : "c9-toolbarbutton-glossy",
-                "class" : "ungit",
+                "class" : "mungit",
                 tooltip : "Git in browser",
-                caption : "Ungit",
+                caption : "Mungit",
                 disabled : false,
                 onclick : function() {
-                  _self.ungit();
+                  _self.mungit();
                 }
             }), 9)
         );
@@ -149,7 +149,7 @@ module.exports = ext.register($name, {
                 width : 900,
                 height: 200,
                 buttons : [{
-                    caption: "Ungit App",
+                    caption: "Mungit App",
                     ext : [this.$name, this.$button],
                     hidden : false
                 }]
@@ -157,23 +157,23 @@ module.exports = ext.register($name, {
         });
         
         dock.register(this.$name, this.$button, {
-            menu : "Ungit App",
+            menu : "Mungit App",
             primary : {
-                backgroundImage: ide.staticPrefix + "/ext/ungit/style/images/ungit.png",
+                backgroundImage: ide.staticPrefix + "/ext/mungit/style/images/ungit.png",
                 defaultState: { x: -11, y: -10 },
                 activeState:  { x: -11, y: -46 }
             }
         }, function() {
             ext.initExtension(_self);
-            return pgUngit;
+            return pgMungit;
         });
 
         ide.addEventListener("extload", function(e){
             ide.addEventListener("settings.load", function(e){
-                settings.setDefaults("ungit", [
+                settings.setDefaults("mungit", [
                     ["plugin_debug", "false"],
                     ["top_bar", "true"],
-                    ["ungit_addr", "https://host/ungit/"],
+                    ["mungit_addr", "https://host/mungit/"],
                     ["workspace_base", "/home/user"]
                 ]);
             });
@@ -186,7 +186,7 @@ module.exports = ext.register($name, {
            * Dockpanel does not dispatch a separate event when the button
            * is pressed.
            */
-          if (settings.model.queryValue("ungit/@plugin_debug") === "true") {
+          if (settings.model.queryValue("mungit/@plugin_debug") === "true") {
             var dockButton = _self._getDockButton();
             if('cache' in dockButton) {
               dockButton.cache.addEventListener("onmouseup", function(e) { 
@@ -199,7 +199,7 @@ module.exports = ext.register($name, {
                 
                 if(e.currentTarget.value === false) {
                   console.log("The state is false!");
-                  var element = document.getElementById("ungit_div");
+                  var element = document.getElementById("mungit_div");
                   unbindElementResize(element);
                 }
                 
@@ -228,8 +228,8 @@ module.exports = ext.register($name, {
         }
     },
 
-    /* Called when Ungit menu item is clicked */
-    ungit: function () {
+    /* Called when Mungit menu item is clicked */
+    mungit: function () {
       if(apf.isIphone) {
         // on iOS, driving a full application within iframe is simply too much even on A10X
         // We fall back to opening ungit in a new tab instead.
@@ -250,31 +250,31 @@ module.exports = ext.register($name, {
 
     // Called when separating the dock to a separate window
     popup: function (url) {
-        url = url || txtUngit.getValue();
+        url = url || txtMungit.getValue();
         window.open(url);
     },
 
     refresh: function (url) {
-      var frmUngit = this.getIframe();
+      var frmMungit = this.getIframe();
       var dockHeight = document.getElementsByClassName('docktab')[0].clientHeight || document.getElementsByClassName('docktab')[2].clientHeight;
       var dockWidth = document.getElementsByClassName('docktab')[0].clientWidth || document.getElementsByClassName('docktab')[2].clientWidth;
-      url = url || txtUngit.getValue();
-      frmUngit.$ext.src = url;
-      txtUngit.setValue(url);
-      if (settings.model.queryValue("ungit/@plugin_debug") === "true") {
-        console.log("Debug: " + dockHeight + " vs " + document.getElementById("ungit_div").clientHeight);
-        console.log("Debug: " + dockWidth + " vs " + document.getElementById("ungit_div").clientWidth);
+      url = url || txtMungit.getValue();
+      frmMungit.$ext.src = url;
+      txtMungit.setValue(url);
+      if (settings.model.queryValue("mungit/@plugin_debug") === "true") {
+        console.log("Debug: " + dockHeight + " vs " + document.getElementById("mungit_div").clientHeight);
+        console.log("Debug: " + dockWidth + " vs " + document.getElementById("mungit_div").clientWidth);
       }
-      ungit_iframe.style.width = dockWidth / 0.70 + 1 + "px";
-      ungit_iframe.style.height = (dockHeight - 36) / 0.70 + 1 + "px";
-      if (settings.model.queryValue("ungit/@plugin_debug") === "true") {
-        console.log("Debug: Height - " + document.getElementById("ungit_div").clientHeight + " | Width - " + document.getElementById("ungit_div").clientWidth);
+      mungit_iframe.style.width = dockWidth / 0.70 + 1 + "px";
+      mungit_iframe.style.height = (dockHeight - 36) / 0.70 + 1 + "px";
+      if (settings.model.queryValue("mungit/@plugin_debug") === "true") {
+        console.log("Debug: Height - " + document.getElementById("mungit_div").clientHeight + " | Width - " + document.getElementById("mungit_div").clientWidth);
       }
     },
 
     /* Close is called when Window Section is closed, not, when the dockable window is hidden */
     close: function () {
-      var element = document.getElementById("ungit_div");
+      var element = document.getElementById("mungit_div");
       unbindElementResize(element);
       dock.hideSection(this.$name, this.$button);
       this.live = null;
@@ -284,11 +284,11 @@ module.exports = ext.register($name, {
       console.log("Init called!");
       apf.importCssString(this.css || "");
       apf.importCssString(this.fa || "");
-      txtUngit.setValue("https://localhost");
+      txtMungit.setValue("https://localhost");
     },
     
     getIframe: function() {
-        return pgUngit.selectSingleNode("iframe");
+        return pgMungit.selectSingleNode("iframe");
     },
 
     enable : function() {
