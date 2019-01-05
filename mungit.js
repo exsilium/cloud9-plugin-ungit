@@ -63,9 +63,14 @@ function bindElementResize() {
       }
     
       resizeTimer = setTimeout(function() {
+        var height_offset = 36;
+        
+        if (settings.model.queryValue("mungit/@top_bar") === "false") {
+          height_offset = 0;
+        }
         resizeTimer = null;
         mungit_iframe.style.width = element.clientWidth / 0.70 + 1 + "px";
-        mungit_iframe.style.height = (element.clientHeight - 36) / 0.70 + 1 + "px";
+        mungit_iframe.style.height = (element.clientHeight - height_offset) / 0.70 + 1 + "px";
       }, 500);
     
       /* During the resize, the iframe needs to be minimized, so that the dock window resize
