@@ -132,7 +132,7 @@ module.exports = ext.register($name, {
         settings.addSettings("Mungit", markupSettings);
 
         this.nodes.push(
-            menus.$insertByIndex(barTools, new apf.button({
+            menus.$insertByIndex(barTools, new ppc.button({
                 skin : "c9-toolbarbutton-glossy",
                 "class" : "mungit",
                 tooltip : "Git in browser",
@@ -235,7 +235,7 @@ module.exports = ext.register($name, {
 
     /* Called when Mungit menu item is clicked */
     mungit: function () {
-      if(apf.isIphone) {
+      if(ppc.isIphone) {
         // on iOS, driving a full application within iframe is simply too much even on A10X
         // We fall back to opening ungit in a new tab instead.
         openTab(constructAddress());
@@ -287,8 +287,8 @@ module.exports = ext.register($name, {
 
     init: function() {
       console.log("Init called!");
-      apf.importCssString(this.css || "");
-      apf.importCssString(this.fa || "");
+      ppc.importCssString(this.css || "");
+      ppc.importCssString(this.fa || "");
       txtMungit.setValue("https://localhost");
     },
     
